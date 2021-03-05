@@ -9,17 +9,6 @@ using System.Threading.Tasks;
 namespace quiet_hn.Pages
 {
 
-    public class HackerNewsEntry
-    {
-
-        public HackerNewsEntry(string title)
-        {
-            Title = title;
-        }
-
-
-        public string Title { get; }
-    }
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
@@ -35,7 +24,9 @@ namespace quiet_hn.Pages
         public void OnGet()
         {
             Entries.Add(new HackerNewsEntry("Test Entry"));
-            QuietHNAPI.DoGet();
+            var hn_client = new QuietHNAPI();
+            hn_client.TopItems();
+            hn_client.GetItemById(1);
         }
     }
 }
