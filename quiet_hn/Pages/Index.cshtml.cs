@@ -35,6 +35,7 @@ namespace quiet_hn.Pages
         public void OnGet()
         {
             Entries.Add(new HackerNewsEntry("Test Entry"));
+            QuietHNAPI.DoGet();
         }
     }
 }
