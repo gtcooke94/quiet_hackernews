@@ -33,7 +33,7 @@ namespace QuietHackerNews.Tests
             for (var i = 0; i < repeats; i++)
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                //new IndexModel(null).GetEntriesParallelFor();
+                new QuietHNAPI().GetEntriesParallelFor(30);
                 watch.Stop();
                 var thisTime = watch.ElapsedMilliseconds;
                 totalTime += thisTime;

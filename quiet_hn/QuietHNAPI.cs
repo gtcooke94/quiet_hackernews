@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using System.Security.Policy;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 
 namespace quiet_hn
 {
@@ -69,9 +70,54 @@ namespace quiet_hn
             return entries;
         }
 
+
+
+        public List<HackerNewsEntry> GetEntriesParallelFor(int numToGet)
+        {
+            var entryIds = TopItems();
+            var entries = new List<HackerNewsEntry>(30);
+            var entryBag = new ConcurrentBag<ConcurrencyItem>();
+            // No awaits or anything needed here
+            Parallel.For(0, numToGet + ENTRY_ADJUSTMENT - 1, i =>
+            {
+                var id = entryIds[i];
+                // Using new API vs. using the captured context API? Since QuietHNAPI doesn't have concurrency, it seems that it would be very bad to try to access in all the different threads?
+                var entry = new QuietHNAPI().GetItemById(id);
+                entryBag.Add(new ConcurrencyItem(i, entry));
+            });
+            var orderedEntries = new HackerNewsEntry[numToGet + ENTRY_ADJUSTMENT];
+            foreach (var concurrentItem in entryBag)
+            {
+                orderedEntries[concurrentItem.Order] = concurrentItem.HnEntry;
+            }
+            foreach (var entry in orderedEntries)
+            {
+                if (IsValidEntry(entry))
+                {
+                    entries.Add(entry);
+                }
+                if (entries.Count == numToGet)
+                {
+                    break;
+                }
+            }
+            return entries;
+        }
         private bool IsValidEntry(HackerNewsEntry entry)
         {
             return entry.type == "story" && !string.IsNullOrEmpty(entry.url);
         }
+   }
+    public class ConcurrencyItem
+    {
+        public ConcurrencyItem(int order, HackerNewsEntry hnEntry)
+        {
+            Order = order;
+            HnEntry = hnEntry;
+        }
+
+        public HackerNewsEntry HnEntry { get; set; }
+        public int Order { get; set; }
     }
 }
+
