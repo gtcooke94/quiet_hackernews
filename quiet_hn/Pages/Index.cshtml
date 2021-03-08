@@ -13,6 +13,10 @@
 
 @foreach(var entry in Model.Entries)
 {
-    <li>@entry.title</li>
+    <li><a href=@entry.url>@entry.title</a></li>
 }
 </ol>
+
+<div>
+    This page was rendered in @Model.RenderTime ms.
+</div>

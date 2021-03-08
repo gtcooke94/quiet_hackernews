@@ -14,6 +14,7 @@ namespace quiet_hn.Pages
         private readonly ILogger<IndexModel> _logger;
 
         public List<HackerNewsEntry> Entries;
+        public long RenderTime { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger)
         {
@@ -23,6 +24,7 @@ namespace quiet_hn.Pages
 
         public void OnGet()
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var hnClient = new QuietHNAPI();
             var entryIds = hnClient.TopItems();
             // Is it better to do this cast or make a new variable with a copy?
@@ -32,6 +34,8 @@ namespace quiet_hn.Pages
             {
                 Entries.Add(hnClient.GetItemById(id));
             }
+            watch.Stop();
+            RenderTime = watch.ElapsedMilliseconds;
         }
     }
 }
