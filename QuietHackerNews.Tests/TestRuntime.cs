@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using quiet_hn;
 using quiet_hn.Pages;
 using System;
+using System.Threading.Tasks;
 
 namespace QuietHackerNews.Tests
 {
@@ -41,5 +42,23 @@ namespace QuietHackerNews.Tests
             }
             Console.WriteLine(totalTime / repeats);
         }
+
+        [TestMethod]
+        public async Task TestGetEntriesAsync()
+        {
+            long totalTime = 0;
+            int repeats = 5;
+            for (var i = 0; i < repeats; i++)
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                await new QuietHNAPIAsync().GetEntriesAsync(30);
+                watch.Stop();
+                var thisTime = watch.ElapsedMilliseconds;
+                totalTime += thisTime;
+                Console.WriteLine(thisTime);
+            }
+            Console.WriteLine(totalTime / repeats);
+        }
+
     }
 }

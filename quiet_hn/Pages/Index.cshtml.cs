@@ -15,6 +15,7 @@ namespace quiet_hn.Pages
         private readonly ILogger<IndexModel> _logger;
 
         public List<HackerNewsEntry> Entries;
+        public string ExtraMessage = null;
         //private ConcurrentBag<ConcurrencyItem> entryBag;
         public long RenderTime { get; set; }
         const int NUM_ENTRIES = 30;
@@ -27,13 +28,18 @@ namespace quiet_hn.Pages
             //entryBag = new ConcurrentBag<ConcurrencyItem>();
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             //Entries = hnAPI.GetEntriesSynchronous(NUM_ENTRIES);
-            Entries = new QuietHNAPI().GetEntriesParallelFor(NUM_ENTRIES);
+
+            //Entries = new QuietHNAPI().GetEntriesParallelFor(NUM_ENTRIES);
+            
+            // Is this just the same as the synchronous because it has to wait for everything to go?
+            Entries = await new QuietHNAPIAsync().GetEntriesAsync(NUM_ENTRIES);
             watch.Stop();
             RenderTime = watch.ElapsedMilliseconds;
+            return Page();
         }
     }
 }
