@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using quiet_hn.QuietHNAPIs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -34,8 +35,12 @@ namespace quiet_hn.Pages
             //Entries = hnAPI.GetEntriesSynchronous(NUM_ENTRIES);
 
             //Entries = new QuietHNAPI().GetEntriesParallelFor(NUM_ENTRIES);
-            
-            Entries = await new QuietHNAPIAsync().GetEntriesAsync(NUM_ENTRIES);
+
+            //Entries = await new QuietHNAPIAsync().GetEntriesAsync(NUM_ENTRIES);
+            var cache = HNCache.Instance;
+            cache.CacheSize = 30;
+            cache.Timeout = 10;
+            Entries = await cache.GetEntries();
             watch.Stop();
             RenderTime = watch.ElapsedMilliseconds;
             return Page();
