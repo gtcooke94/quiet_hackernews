@@ -108,16 +108,5 @@ namespace quiet_hn
             return entry.type == "story" && !string.IsNullOrEmpty(entry.url);
         }
    }
-    public class ConcurrencyItem
-    {
-        public ConcurrencyItem(int order, HackerNewsEntry hnEntry)
-        {
-            Order = order;
-            HnEntry = hnEntry;
-        }
-
-        public HackerNewsEntry HnEntry { get; set; }
-        public int Order { get; set; }
-    }
 }
 

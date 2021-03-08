@@ -35,7 +35,6 @@ namespace quiet_hn.Pages
 
             //Entries = new QuietHNAPI().GetEntriesParallelFor(NUM_ENTRIES);
             
-            // Is this just the same as the synchronous because it has to wait for everything to go?
             Entries = await new QuietHNAPIAsync().GetEntriesAsync(NUM_ENTRIES);
             watch.Stop();
             RenderTime = watch.ElapsedMilliseconds;

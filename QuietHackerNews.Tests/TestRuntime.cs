@@ -59,6 +59,5 @@ namespace QuietHackerNews.Tests
             }
             Console.WriteLine(totalTime / repeats);
         }
-
     }
 }
