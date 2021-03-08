@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using quiet_hn;
+using System;
 
 namespace QuietHackerNews.Tests
 {
@@ -20,6 +21,7 @@ namespace QuietHackerNews.Tests
         {
             var api = new QuietHNAPI();
             var entry = api.GetItemById(1);
+            Console.WriteLine("Test");
         }
     }
 }

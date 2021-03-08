@@ -11,21 +11,8 @@ namespace quiet_hn
 {
     public class QuietHNAPI
     {
-        public static string BasicGet()
-        {
-            string url = "http://www.google.com";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            var response = request.GetResponse();
-            var test = response.ToString();
-            var stream = response.GetResponseStream();
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                var test2 = reader.ReadToEnd();
-            }
-            return "";
-        }
-
         const string API_BASE = "https://hacker-news.firebaseio.com/v0";
+        const int ENTRY_ADJUSTMENT = 10;
 
         public int[] TopItems()
         {
@@ -60,24 +47,31 @@ namespace quiet_hn
             HackerNewsEntry entry = JsonConvert.DeserializeObject<HackerNewsEntry>(content);
             return entry;
         }
-    }
-
-    public class HackerNewsEntry
-    {
-        public string by;
-        public string decesdants;
-        public int id;
-        public int[] kids;
-        public int score;
-        public int time;
-        public string title;
-        public string type;
-        public string url;
-
-        public HackerNewsEntry(string title)
-        //{ "by":"pg","descendants":15,"id":1,"kids":[15,234509,487171,454426,454424,454410,82729],"score":57,"time":1160418111,"title":"Y Combinator","type":"story","url":"http://ycombinator.com"}
+        public List<HackerNewsEntry> GetEntriesSynchronous(int numToGet)
         {
-            this.title = title;
+            var entries = new List<HackerNewsEntry>(30);
+            var entryIds = TopItems();
+            // Is it better to do this cast or make a new variable with a copy?
+            // This servers to garbage collect the longer list that we don't care about?
+            //var entryIdsShort = entryIds.Take(35);
+            foreach (var id in entryIds)
+            {
+                var entry = GetItemById(id);
+                if (IsValidEntry(entry))
+                {
+                    entries.Add(entry);
+                }
+                if (entries.Count == numToGet)
+                {
+                    break;
+                }
+            }
+            return entries;
+        }
+
+        private bool IsValidEntry(HackerNewsEntry entry)
+        {
+            return entry.type == "story" && !string.IsNullOrEmpty(entry.url);
         }
     }
 }
