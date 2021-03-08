@@ -29,10 +29,18 @@ namespace quiet_hn.Pages
             var entryIds = hnClient.TopItems();
             // Is it better to do this cast or make a new variable with a copy?
             // This servers to garbage collect the longer list that we don't care about?
-            var entryIdsShort = entryIds.Take(35);
-            foreach (var id in entryIdsShort)
+            //var entryIdsShort = entryIds.Take(35);
+            foreach (var id in entryIds)
             {
-                Entries.Add(hnClient.GetItemById(id));
+                var entry = hnClient.GetItemById(id);
+                if (entry.type == "story" && !string.IsNullOrEmpty(entry.url))
+                {
+                    Entries.Add(entry);
+                }
+                if (Entries.Count == 30)
+                {
+                    break;
+                }
             }
             watch.Stop();
             RenderTime = watch.ElapsedMilliseconds;
