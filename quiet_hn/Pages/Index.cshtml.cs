@@ -23,10 +23,15 @@ namespace quiet_hn.Pages
 
         public void OnGet()
         {
-            Entries.Add(new HackerNewsEntry("Test Entry"));
-            var hn_client = new QuietHNAPI();
-            hn_client.TopItems();
-            hn_client.GetItemById(1);
+            var hnClient = new QuietHNAPI();
+            var entryIds = hnClient.TopItems();
+            // Is it better to do this cast or make a new variable with a copy?
+            // This servers to garbage collect the longer list that we don't care about?
+            var entryIdsShort = entryIds.Take(35);
+            foreach (var id in entryIdsShort)
+            {
+                Entries.Add(hnClient.GetItemById(id));
+            }
         }
     }
 }
