@@ -5,6 +5,8 @@ using quiet_hn.Pages;
 using System;
 using System.Threading.Tasks;
 
+// These aren't real tests, just using this as a harness to quickly get information on how long these methods are taking
+
 namespace QuietHackerNews.Tests
 {
     [TestClass]

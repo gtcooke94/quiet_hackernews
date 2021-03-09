@@ -38,8 +38,6 @@ namespace quiet_hn.Pages
 
             //Entries = await new QuietHNAPIAsync().GetEntriesAsync(NUM_ENTRIES);
             var cache = HNCache.Instance;
-            cache.CacheSize = 30;
-            cache.Timeout = 10;
             Entries = await cache.GetEntries();
             watch.Stop();
             RenderTime = watch.ElapsedMilliseconds;

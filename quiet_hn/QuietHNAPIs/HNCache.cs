@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+// TODO, implement cache updates as a separate timed service: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice
 namespace quiet_hn.QuietHNAPIs
 {
     public class HNCache
@@ -15,7 +16,7 @@ namespace quiet_hn.QuietHNAPIs
         private List<HackerNewsEntry> entries = new List<HackerNewsEntry>();
         public int CacheSize { get; set; } = 30;
 
-        public long Timeout = 30;
+        public long Timeout = 10;
         public static HNCache Instance
         {
             get
